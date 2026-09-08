@@ -32,12 +32,12 @@ User-facing documentation: [README.md](README.md) ·
 
 <!-- generated:deps -->
 
-| Direction                                      | Packages                                                                                        |
-| :--------------------------------------------- | :---------------------------------------------------------------------------------------------- |
-| Imports (static)                               | `contract` _(type-only)_                                                                        |
-| Imports (soft, via `tryImportOptionalPackage`) | —                                                                                               |
-| Imported by                                    | `cache`, `core`, `drizzle`                                                                      |
-| **Must never import**                          | `cache`, `core`, `drizzle` — each already reaches this package, so importing one closes a cycle |
+| Direction                                      | Packages                                                                                                        |
+| :--------------------------------------------- | :-------------------------------------------------------------------------------------------------------------- |
+| Imports (static)                               | `contract` _(type-only)_                                                                                        |
+| Imports (soft, via `tryImportOptionalPackage`) | —                                                                                                               |
+| Imported by                                    | `cache`, `core`, `drizzle`, `notification`                                                                      |
+| **Must never import**                          | `cache`, `core`, `drizzle`, `notification` — each already reaches this package, so importing one closes a cycle |
 
 Enforced by `deno task deps:analyze` against `deps.policy.jsonc`. A soft edge is
 deliberately **not** declared in this package's `deno.json`: the consuming
@@ -53,7 +53,7 @@ application installs it, or the feature stays off.
 | :-------- | :------------------------------------------------------------- |
 | class     | `CircularDependencyError`, `Container`, `ServiceNotFoundError` |
 | function  | `Inject`, `Service`, `bind`, `createContainer`, `resolve`      |
-| interface | `ContainerContract`                                            |
+| interface | `ContainerContract`, `ContainerRegistration`                   |
 | typeAlias | `Constructor`, `ServiceToken`                                  |
 | variable  | `container`                                                    |
 
@@ -82,10 +82,11 @@ Anything not listed is internal and free to change.
 
 <!-- generated:tests -->
 
-2 test files for 6 source files:
+3 test files for 6 source files:
 
 - `packages/container/tests/circular.test.ts`
 - `packages/container/tests/container.test.ts`
+- `packages/container/tests/registrations.test.ts`
 
 <!-- /generated:tests -->
 
@@ -101,7 +102,7 @@ deno task deps:analyze     # cycles, declaration drift, tier policy
 deno task agents:brief     # refresh this file's generated blocks
 ```
 
-Then, specific to this package: run its 2 test files directly —
+Then, specific to this package: run its 3 test files directly —
 
 ```bash
 deno test -A packages/container/
